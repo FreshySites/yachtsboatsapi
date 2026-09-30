@@ -1,0 +1,892 @@
+/*Listing page design*/
+.yacht-listings-wrapper{
+	max-width: 100% !important;
+}
+.yacht-listings-wrapper .boats-banner-section{
+	display: none;
+}
+.search.scroll-section {
+	width: 100%;
+	display: block;
+	padding-top: 50px;
+	background: #f7f7f7;
+	padding-bottom: 50px;
+}
+
+.sub-heading-global {
+	padding: 0 0 30px;
+	text-transform: capitalize;
+	position: relative;
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+html body .col-lg-4.agent_info h3 {
+	font-family: 'Lato';
+	position: relative;
+	padding: 0 0 30px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #ffffff;
+}
+
+html body .modal-header {
+	border: none;
+}
+
+.col-lg-4.agent_info h3 span {
+	color: #8c9597;
+	font-size: 18px;
+}
+
+.sub-heading-global h2 {
+	color: #54595f;
+	text-transform: uppercase;
+}
+
+.modal-header .sub-heading-global {
+	margin-bottom: 20px;
+}
+
+html body .modal-content {
+	background: #fff;
+	border-radius: 0;
+}
+
+.col-lg-4.agent_info h3:before,
+.col-lg-4.agent_info h3:after,
+.sub-heading-global h2:before,
+.sub-heading-global h2:after {
+	content: '';
+	position: absolute;
+	width: 20%;
+	height: 1px;
+	background: #d3d3d3;
+	left: 0;
+	bottom: 3px;
+	right: 0;
+	margin: auto;
+}
+
+.col-lg-4.agent_info h3:before,
+.sub-heading-global h2:before {
+	width: 11%;
+	height: 7px;
+	bottom: 0;
+	border-radius: 20px;
+}
+
+.col-lg-4.agent_info h3:after {
+	width: 60%;
+	bottom: 2px;
+}
+
+.right-box-inner {
+	display: inline-block;
+	width: 100%;
+	/*    padding: 15px;*/
+	border: 1px solid #fff;
+}
+
+.col-lg-4.agent_info h4 span {
+	font-size: 15px;
+}
+
+.col-lg-4.agent_info h3:before {
+	width: 35%;
+	height: 5px;
+}
+
+form#searchForm .col-md-5 {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+form#searchForm .col-md-5 .form-group.noUiGroup {
+	width: 29.33%;
+	padding: 0 15px;
+}
+
+form#searchForm .col-md-5 .form-group.noUiGroup:first-child {
+	padding-left: 0;
+}
+
+form#searchForm .col-md-5 .form-group.noUiGroup:last-child {
+	padding-right: 0;
+}
+
+html body a:hover {
+	text-decoration: none;
+}
+
+.pageid-327 #header.sticky-header:not(.static-sticky) #header-wrap {
+	height: 130px;
+	background: #ffffffe8;
+	box-shadow: 0px 2px 5px #ebebeb;
+}
+
+.news-letter-main {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+p.results {
+	text-transform: uppercase;
+	margin: 10px 0 30px;
+	color: #54595f;
+}
+
+form#searchForm .col-md-7 {
+	width: 100%;
+}
+
+html body .noUi-connect {
+	background: #54595f;
+	border-radius: 4px;
+	box-shadow: none;
+}
+
+html body .noUi-horizontal {
+	height: 13px;
+}
+
+html body .noUi-target {
+	background: #f5f5f5;
+	border-radius: 0px;
+	border: 1px solid #D3D3D3;
+	box-shadow: inset 0 1px 1px #f0f0f0, 0 3px 6px -5px #bbb;
+}
+
+html body .noUi-horizontal .noUi-handle {
+	width: 25px;
+	height: 25px;
+	left: -10px;
+	top: -7px;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 6px solid #3c7ab7;
+	box-shadow: none;
+}
+
+form#searchForm label {
+	font-size: 15px;
+	margin-bottom: 15px;
+	color: #54595f;
+}
+
+.noUi-horizontal .noUi-handle:after,
+.noUi-horizontal .noUi-handle:before {
+	display: none;
+}
+
+html body .form-control {
+	position: relative;
+	background: #fff;
+	color: #54595f;
+	font-weight: 700;
+	font-family: 'Circular-Loom';
+	border-radius: 0;
+	height: 45px;
+}
+
+li.custom-checkRad {
+	justify-content: flex-start;
+	width: auto;
+}
+
+form#searchForm li.custom-checkRad label {
+	margin-bottom: 0;
+	padding-left: 8px;
+}
+
+.boats-inner-content a.mls-image,
+.pagination-main,
+li.custom-checkRad,
+ul.type-radio.sale-lease {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+ul.type-radio.sale-lease {
+	margin: 0;
+	padding: 0;
+}
+
+.form-group.radio-buttons {
+	margin-top: 30px;
+}
+
+.text-right.global-button-gray {
+	margin-top: 30px;
+}
+
+.global-button-gray a,
+html body .global-button-gray button {
+	padding: 10px 25px 10px;
+	background-color: #54595f !important;
+	color: #fff !important;
+	font-size: 17px;
+	box-shadow: none;
+	border: none;
+	border-radius: 2px;
+	font-family: 'Raleway';
+	font-weight: bold;
+	transition: 0.5s;
+}
+
+.global-button-gray a:hover,
+.global-button-gray button:hover {
+	opacity: 0.7;
+	transition: 0.5s;
+}
+
+.global-button-gray button i.fa.fa-search {
+	padding-left: 10px;
+}
+
+.boats-inner-content a.mls-image,
+.pagination-main {
+	justify-content: space-between;
+	align-items: center;
+}
+
+.pagination-main .pagination-content ul.pagination a {
+	font-size: 15px;
+	font-family: 'Raleway';
+	font-weight: 400;
+}
+
+.pagination-main .pagination-content ul.pagination i.fas.fa-angle-right {
+	font-family: 'FontAwesome';
+	font-style: initial;
+	padding-left: 5px;
+	line-height: 0;
+}
+
+.pagination-main .pagination-content ul.pagination {
+	margin: 0;
+	padding: 0;
+	border: 0px solid lightgrey;
+}
+
+.inner-headings h2 {
+	color: #54595f;
+	margin-bottom: 0px;
+}
+
+.inner-headings p {
+	font-size: 17px;
+	color: #54595f;
+}
+
+.inner-headings {
+	padding: 30px 0;
+}
+
+.boat-listing-main {
+	padding: 60px 0 80px;
+	background: #fff;
+}
+
+html body .col-lg-4.agent_info a:focus {
+	background: #71777f !important;
+	text-decoration: none;
+}
+
+.boat-img img {
+	height: 250px;
+	width: 100%;
+	object-fit: cover;
+	object-position: top center;
+	transition: 0.5s;
+}
+
+.shadow {
+	display: block;
+	position: absolute;
+	z-index: 2;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	height: 55%;
+	opacity: 1;
+	transition: all .4s ease;
+	-webkit-transition: all .4s ease;
+	-moz-transition: all .4s ease;
+	-o-transition: all .4s ease;
+	background: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, .75) 92%, rgba(0, 0, 0, .85) 100%);
+	background: -webkit-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, .75) 92%, rgba(0, 0, 0, .85) 100%);
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, .75) 92%, rgba(0, 0, 0, .85) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#a6000000', GradientType=0);
+}
+
+.inner-box-boarts {
+	position: relative;
+	margin-bottom: 30px;
+	overflow: hidden;
+}
+
+.boats-inner-content {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 15px;
+	z-index: 3;
+}
+
+.boats-inner-content span {
+	font-size: 15px;
+	text-transform: uppercase;
+	color: #fff;
+}
+
+.overloay-box {
+	transform: scale(0);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 4;
+	transition: 0.5s;
+	background: #0000004d;
+}
+
+ul.type-radio.sale-lease li.custom-checkRad,
+.boats-inner-content a.mls-image {
+	align-items: center;
+}
+
+ul.type-radio.sale-lease li.custom-checkRad input {
+	margin: 0;
+	width: 20px;
+	height: 20px;
+	border: 3px solid #54595f;
+	border-radius: 0px;
+}
+
+ul.type-radio.sale-lease li.custom-checkRad input:checked {
+	background: #3f75ff;
+	position: relative;
+	border: 3px solid #d3d3d3;
+	box-sizing: border-box;
+}
+
+ul.type-radio.sale-lease li.custom-checkRad input:checked:after {
+	content: '\f00c';
+	font-family: 'Font Awesome 5 Pro';
+	transform: rotate(0deg);
+	left: 3px;
+	top: 3px;
+	border: none;
+	color: #fff;
+	font-size: 9px;
+	width: 100%;
+	height: 100%;
+	font-weight: 600;
+}
+
+li.custom-checkRad:last-child {
+	margin-left: 25px;
+}
+
+span.total-tempure {
+	font-size: 20px;
+}
+
+span.total-tempure {
+	font-size: 20px;
+}
+
+.inner-box-boarts:hover .overloay-box {
+	transform: scale(1);
+	transition: 0.5s;
+}
+
+.inner-box-boarts:hover img {
+	transform: scale(1.1);
+	transition: 0.5s;
+}
+
+.overloay-box a.mls-image:after {
+	width: 93%;
+	height: 90%;
+	position: absolute;
+	content: '';
+	border: 1px solid #fff;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+}
+
+.overloay-box a.mls-image {
+	display: block;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	padding: 25px;
+	position: relative;
+}
+
+.overloay-box a.mls-image span {
+	color: #fff;
+	font-size: 20px;
+	line-height: 25px;
+	display: block;
+}
+
+.inner-box-boarts:hover .boats-inner-content {
+	transform: scale(0);
+	transition: 0.5s;
+}
+
+.main-content {
+	overflow: hidden;
+}
+
+aside.widget-area {
+	padding: 0;
+	margin: 0 auto;
+}
+
+.main-content {
+	background-color: #fff;
+}
+
+html body a:focus,
+html body button:focus,
+ul.type-radio.sale-lease li.custom-checkRad input:focus,
+html body .noUi-horizontal .noUi-handle:focus {
+	outline: none;
+}
+
+label {
+	display: inline-block;
+	font-size: 13px;
+	font-weight: 700 !important;
+	font-family: 'Raleway', sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: #555;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.plugin-banner {
+	height: 350px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	z-index: 1;
+}
+
+.boats-banner-section {
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	background-attachment: fixed;
+}
+
+.boats-banner-section:after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #00000061;
+	top: 0;
+	left: 0;
+}
+
+h1.page-heading {
+	color: #fff;
+	font-size: 32px;
+}
+
+.main-heading {
+	text-align: center;
+}
+
+ul.type-radio.sale-lease li.custom-checkRad input:checked {
+	background: #3f75ff;
+}
+
+.inner-box-boarts a.mls-image:focus {
+	text-decoration: none;
+}
+.exclise-listing-detail-main {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+ul.nav.nav-tabs li a {
+	font-size: 20px;
+	text-transform: capitalize;
+}
+.col-lg-4.agent_info {
+    height: max-content;
+}
+.exclise-listing-detail-main .col-lg-8 {
+    width: 65%;
+}
+.modal-body label,
+.popup-image h4,
+html body .col-lg-4.agent_info h4,
+.col-lg-4.agent_info h3 span,
+.col-lg-4.agent_info h4 span,
+.col-lg-4.agent_info h3 {
+	text-transform: uppercase;
+	color: #081a2b;
+}
+
+.col-lg-4.agent_info a {
+	color: #fff;
+}
+
+.col-lg-4.agent_info a {
+	display: block;
+	background: #71777f;
+	padding: 10px 0;
+	border-radius: 5px;
+	margin-bottom: 15px;
+}
+
+html body .col-lg-4.agent_info h4 {
+	font-size: 25px;
+	margin-bottom: 20px;
+}
+
+ul.nav.nav-tabs {
+	margin-bottom: 15px;
+}
+
+div#myCarousel ol.carousel-indicators {
+	bottom: 20px;
+	margin-bottom: 0;
+}
+
+.tab-pane.fade ul.fa-ul li,
+.tab-pane.fade p {
+	font-size: 16px;
+}
+
+.listing-main-detail {
+	padding: 50px 0 40px;
+}
+
+.modal-content .modal-header h5 {
+	font-size: 30px;
+	color: #8c9597;
+	font-weight: 500;
+	line-height: 40px;
+}
+
+body .site a:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
+	background: inherit !important;
+}
+
+.modal-content .modal-header button.close {
+	position: absolute;
+	right: -15px;
+	top: -13px;
+	display: inline-block;
+	padding: 7px;
+	background: #8c9597;
+	color: #fff;
+	width: 35px;
+	height: 35px;
+	border-radius: 20px;
+	z-index: 99;
+	opacity: 1;
+}
+
+.modal-content .modal-header button.close span {
+	margin-top: -4px;
+	display: block;
+}
+
+.popup-image,
+.modal-body {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.popup-image {
+	width: 100%;
+	justify-content: flex-start;
+}
+
+.form-row-half {
+	width: 49%;
+}
+
+.form-rowfull {
+	width: 100%;
+}
+
+.modal-body label {
+	font-size: 14px;
+	padding-top: 20px;
+}
+
+html .modal-body textarea,
+.modal-body input.form-control {
+	height: 45px;
+	display: block;
+	width: 100%;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555555;
+	background-color: #ffffff;
+	background-image: none;
+	border: 3px solid #cccccc;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.modal-content form {
+	margin-bottom: 0;
+}
+
+html body .modal-footer {
+	padding: 15px;
+	text-align: right;
+	border: none;
+}
+
+html body .modal-footer button {
+	color: #fff;
+	line-height: 1em;
+	text-decoration: none;
+	text-transform: capitalize;
+	padding: 12px 25px;
+	font-weight: 700;
+	font-size: 16px;
+	text-align: center;
+	background: #3c7ab7;
+	border-color: #3c7ab7; 
+	border-radius:0;
+}
+
+.col-lg-4.agent_info a.btn-layout.small-btn-layout:focus {
+	background: #71777f !important;
+}
+
+.form-rowfull.response_msg.error p,
+.form-rowfull.response_msg.success p {
+	color: #ffc645;
+	text-transform: uppercase;
+	margin-bottom: 0;
+	margin-top: 20px;
+}
+
+main#main {
+	overflow: hidden;
+}
+
+html body .modal-dialog {
+	width: 100%;
+	margin: 40px auto;
+	max-width: 840px;
+}
+
+.popup-image img {
+	width: 100%;
+	object-fit: cover;
+	object-position: bottom;
+	height: auto !important;
+}
+
+.ribbon {
+	position: absolute;
+	padding: 5px 0;
+	font-size: 16px;
+	transform: rotate(-45deg);
+	top: 25px;
+	left: -45px;
+	width: 180px;
+	text-align: center;
+	box-shadow: 0px 3px 2px #0000007a;
+	transition: 0.5s;
+}
+
+@media only screen and (max-width: 1200px) {
+	form#searchForm label {
+		font-size: 12px;
+		margin-bottom: 10px;
+	}
+}
+
+@media only screen and (max-width: 1024px) {
+	p.results {
+		margin: 5px 0 20px;
+		font-size: 12px;
+	}
+	.global-button-gray a,
+	.global-button-gray button {
+		font-size: 14px;
+	}
+}
+
+@media only screen and (max-width: 991px) {
+	.text-right {
+		text-align: left;
+	}
+	.news-letter-main .col-md-4:last-child .inner-box-boarts {
+		margin-bottom: 40px;
+	}
+	.inner-box-boarts {
+		margin-bottom: 15px;
+	}
+	form#searchForm .col-md-5 .form-group.noUiGroup {
+		width: 100%;
+		padding: 0;
+	}
+	.boat-img img {
+		height: 180px;
+	}
+	.news-letter-main .col-md-4 {
+		width: 33.33%;
+		padding: 0 7px;
+	}
+	html body .col-lg-4.agent_info h4 {
+	    font-size: 20px;
+	}
+	.col-lg-4.agent_info h4 span {
+	    font-size: 13px;
+	}
+	html body .col-lg-4.agent_info h3 {
+	    font-size: 22px;
+	}
+	.col-lg-4.agent_info {
+	    padding: 10px;
+	}
+	ul.nav.nav-tabs li a {
+	    font-size: 17px;
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	.form-row-half {
+		width: 100%;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	body.pageid-327 .container {
+		width: 100% !important;
+	}
+	.news-letter-main .col-md-4 {
+		width: 50%;
+	}
+	html body .container {
+		width: 100%;
+		padding: 0 50px;
+	}
+	.news-letter-main .col-md-4 {
+		width: 50%;
+	}
+	.pagination-main .pagination-content ul.pagination a {
+		font-size: 12px;
+	}
+	.plugin-banner {
+		height: 250px;
+	}
+	.ribbon {
+		top: 20px;
+		left: -40px;
+		width: 160px;
+		font-size: 14px;
+	}
+	form#searchForm .col-md-7 {
+		width: 100%;
+		padding: 0 5px;
+	}
+	.global-button-gray a,
+	html body .global-button-gray button,
+	.global-button-gray a,
+	.global-button-gray button {
+		font-size: 13px;
+	}
+	.boat-listing-main {
+		padding: 40px 0 50px;
+	}
+	.search.scroll-section {
+		padding-top: 30px;
+		padding-bottom: 30px;
+	}
+	.overloay-box a.mls-image span {
+		font-size: 16px;
+	}
+	.overloay-box a.mls-image {
+		padding: 20px;
+	}
+	.col-lg-4.agent_info h3:before,
+	.col-lg-4.agent_info h3:after,
+	.sub-heading-global h2:before,
+	.sub-heading-global h2:after {
+		width: 40%;
+	}
+	.col-lg-4.agent_info h3:before,
+	.sub-heading-global h2:before {
+		width: 20%;
+	}
+	.global-button-gray a,
+	html body .global-button-gray button {
+		padding: 8px 10px 8px;
+	}
+	.overloay-box a.mls-image:after {
+		width: 95.5%;
+	}
+	html body .exclise-listing-detail-main .col-lg-4.agent_info, .exclise-listing-detail-main .col-lg-8 {
+	    width: 100%;
+	}
+	.col-lg-4.agent_info {
+	    margin: 0 0 30px;
+	}
+	.listing-main-detail {
+	    padding: 30px 0 0px;
+	}
+	.listing-main-detail .container {
+	    padding: 0px 30px;
+	}
+	.exclise-listing-detail-main {
+	    flex-direction: column-reverse;
+	}
+}
+
+@media only screen and (max-width: 480px) {
+	.boats-inner-content a.mls-image, .pagination-main{
+		justify-content: center;
+	}
+	.news-letter-main .col-md-4 {
+		width: 100%;
+	}
+	.pagination-main .pagination-content ul.pagination {
+		margin-top: 10px;
+	}
+	.pagination-main .pagination-content ul.pagination a {
+		padding: 10px 9px;
+	}
+	html body .container {
+		padding: 0 40px;
+	}
+	.form-group.radio-buttons {
+		margin-top: 15px;
+	}
+	.news-letter-main .col-md-4:last-child .inner-box-boarts {
+		margin-bottom: 30px;
+	}
+}

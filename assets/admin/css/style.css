@@ -1,0 +1,227 @@
+.settings_page_boats_api input[type=date],
+input[type=datetime-local],
+input[type=datetime],
+input[type=email],
+input[type=month],
+input[type=number],
+input[type=password],
+input[type=search],
+input[type=tel],
+input[type=text],
+input[type=time],
+input[type=url],
+input[type=week] {
+	width: 50%;
+}
+
+.settings_page_boats_api div#wpbody-content table tbody tr th:first-child {
+	width: 200px;
+	text-align: left;
+}
+
+.loadersmall {
+	display: none;
+	border: 5px solid #ff9800;
+	-webkit-animation: spin 1s linear infinite;
+	animation: spin 1.2s linear infinite;
+	border-top: 5px solid #555;
+	border-radius: 50%;
+	width: 17px;
+	height: 17px;
+	margin-left: 15px;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.loder_imp {
+	display: inline-block;
+}
+
+#message {
+	display: none;
+}
+
+.settings_page_boats_api .notice,
+div.error,
+div.updated {
+	background: #fff;
+	/*border: 1px solid #4caf50;*/
+	border-left-width: 4px;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+	margin: 5px 15px 10px 0;
+	padding: 1px 12px;
+}
+body p.response_msg {
+    color: cadetblue;
+	margin: 0.3em 0;
+    padding: 0px;
+	color: #000;
+	font-weight: 600;
+}
+body th#cb,
+th.manage-column.column-cb.check-column {
+	padding: 10px;
+}
+
+th.check-column {
+	padding: 10px !important;
+}
+
+.yachts-contact-form h1 {
+	text-align: center;
+	padding: 20px;
+}
+
+
+
+.yachts-contact-form form#reused_form input {
+	width: 100%;
+    border-radius: inherit;
+    margin: 0px 0px 15px;
+    border: none;
+}
+
+input#email {
+	margin-top: 0 !important;
+}
+
+.yachts-contact-form form#reused_form textarea#message {
+	height: 150px;
+	display: block;
+	width: 100%;
+	border: none;
+}
+
+.yachts-contact-form form#reused_form button.button-primary {
+	padding: 5px 30px;
+	margin-top: 10px;
+}
+
+.contact-section {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    padding: 40px 0 0px;
+}
+
+.contact-sec-heading h1 {
+	background-color: #fdf9d9;
+	margin: 0;
+	padding-top: 40px;
+}
+
+.Conatc {
+    padding: 25px 30px 40px;
+    width: 70%;
+    margin: auto;
+    background: #d9d9d9;
+    border: 1px solid #3871b1;
+    border-radius: 3px;
+}
+
+.contact-info {
+    margin: 0 auto;
+    padding: 27px 15px;
+    background-color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border-radius: 4px;
+}
+.contact-info h1, .contact-info p {
+    width: 100%;
+}
+.contact-address {
+	    width: 49%;
+}
+
+.contact-info h1 {
+	color: #000;
+	margin-bottom: 0;
+	font-size: 20px;
+}
+
+.contact-info p a {
+	text-decoration: none;
+	font-size: 20px;
+	color: #b1b1b1;
+}
+
+.contact-info p {
+	margin: 0;
+}
+
+.contact-sec-heading {
+	text-align: center;
+	width: 70%;
+	margin: 0 auto;
+}
+
+.yachts-contact-form {
+
+    width: 49%;
+}
+
+
+.contact-sec-heading h1 {
+     position: relative;
+}
+th#columnname,
+td.column-columnname {
+	text-align: center;
+}
+.sub-heading-global {
+    padding: 0 0 30px;
+    text-transform: capitalize;
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+}
+.sub-heading-global h2:before,
+.sub-heading-global h2:after {
+	content: '';
+	position: absolute;
+	width: 20%;
+	height: 1px;
+	background: #3871b1;
+	left: 0;
+	bottom: 3px;
+	right: 0;
+	margin: auto;
+}
+
+.sub-heading-global h2:before {
+	width: 11%;
+	height: 7px;
+	bottom: 0;
+	border-radius: 20px;
+}
+.sub-heading-global h2 {
+    margin: 0;
+    font-size: 29px;
+    line-height: 50px;
+}
+.setting-main-heading a.documentatation-link {
+	font-style: italic;
+}
+.setting-main-heading a.documentatation-link:hover{
+	color: green;
+}
+.yacht-inquiries-table table.widefat.fixed {
+    width: 98.5%;
+}
+.wp-core-ui .notice.is-dismissible {
+    border-radius: 3px;
+    margin-bottom: 25px;
+}
+.notice-dismiss{
+	padding: 4px;
+}
