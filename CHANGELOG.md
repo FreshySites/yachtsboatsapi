@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
 ## [1.5.0] - 2026-09-30
 
 ### Changed
-- Removed the activation-key requirement. Imports no longer depend on a license key or on `yachts.wpharbor.com`.
+- Removed the activation-key requirement. Imports no longer depend on a license key.
+- Added setup and usage documentation in the README.
 - The Boats API key and API URL are still configured per site under Settings → Yacht Importer.
 
 ## [1.4.0] - 2025-07-08
