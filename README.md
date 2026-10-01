@@ -2,7 +2,7 @@
 
 WordPress plugin that imports YachtWorld listings into a filterable grid on your site.
 
-Version 1.6.0 does not ask for an activation key. Each site still needs its own YachtWorld / Boats API URL and API key.
+Version 1.6.1 does not ask for an activation key. Each site still needs its own YachtWorld / Boats API URL and API key.
 
 ## What it does
 

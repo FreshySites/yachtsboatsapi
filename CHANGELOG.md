@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [1.6.1] - 2026-10-01
+
+### Changed
+- Plugin URI, author, and the settings documentation link now point at Freshy and this GitHub repository.
+- Removed the settings-page contact form and contact details. This plugin does not offer support.
+
+
 ## [1.6.0] - 2026-10-01
 
 ### Changed

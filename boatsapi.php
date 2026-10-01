@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Yacht Importer
-Plugin URI: https://wpharbor.com/
+Plugin URI: https://github.com/FreshySites/yachtsboatsapi
 Description: This plugin is used to fetch and store boats from API.
-Version: 1.6.0
-Author: WP Harbor
-Author URI: https://wpharbor.com/
+Version: 1.6.1
+Author: Freshy (formerly WP Harbor)
+Author URI: https://freshysites.com/
 Text Domain: boatsapi
 */
 
@@ -18,13 +18,13 @@ if ( !function_exists( 'add_action' ) ) {
 /* * */
 define('YACHT_PLUGIN_SLUG', 'yachtsboatsapi');
 define('YACHT_PLUGIN_FILE', plugin_basename(__FILE__));
-define('YACHT_PLUGIN_VERSION', '1.6.0');
+define('YACHT_PLUGIN_VERSION', '1.6.1');
 /* * */
 
 
 
 
-define( 'BOATS_VERSION', '1.6.0' );
+define( 'BOATS_VERSION', '1.6.1' );
 define( 'BOATS__MINIMUM_WP_VERSION', '4.0' );
 define( 'BOATS__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BOATS_DELETE_LIMIT', 100000 );
@@ -324,7 +324,7 @@ function boats_api_options_page()
 <form method="post" action="options.php">
 	<?php settings_fields( 'boats_api_options_group' ); ?>
 	<h3>API Settings</h3>
-	<p><?php echo "<a href='https://wpharbor.com/yachtworld-wordpress-plugin/documentation/' class='documentatation-link' target='_blank'>Read Documentation</a>";  ?> </p>
+	<p><?php echo "<a href='https://github.com/FreshySites/yachtsboatsapi/blob/main/README.md' class='documentatation-link' target='_blank'>Read Documentation</a>";  ?> </p>
 
 	<table style="width: 100%;">
 		<tr valign="top">
@@ -430,84 +430,7 @@ if( $key && $api_url ){ ?>
 }
 
 
-$msg = array();
-if(isset($_POST['submit_query'])){
-	if($_POST['Name'] && $_POST['Email'] && $_POST['Message']){
-		// $to 			= 'steveprolimit@gmail.com';
-		$to 			= 'Support@wpharbor.com';
-		$head_new_usr 	= array('Content-Type: text/html; charset=UTF-8');
-		$subject_new_usr = "Contact Us Customer Support";
-		$new_user_msg = '';
-
-		$new_user_msg .= "<html><body>";
-		$new_user_msg .= "<p>Hi Admin,</p>";
-		$new_user_msg .= "<p>";
-		$new_user_msg .= "Name: ".$_POST['Name']. " <br>";
-		$new_user_msg .= "Email: ".$_POST['Email']. " <br>";
-		$new_user_msg .= "Message: ".$_POST['Message']." <br>";
-		$new_user_msg .= "Website: ".get_site_url()." <br>";
-		$new_user_msg .= "<br>";
-		$new_user_msg .= "</p>";
-		$new_user_msg .= "<p>Thanks!</p>";
-		$new_user_msg .= "</html></body>";
-
-		$check = wp_mail( $to, $subject_new_usr, $new_user_msg, $head_new_usr );
-
-		if($check){
-			$msg['success'] = 'Your inquery has been submitted successfully! We will get back to you soon!';
-		}else{
-			$msg['error'] = 'Something went wrong! Please try again.';
-		}
-	}else{
-		$msg['error'] = 'Please fill all fields carefully and try again.';
-	}
-}
-
-?>	
-	
-	
-<div class="Conatc">
-	<div class="sub-heading-global">
-		<h2>
-			Do you have a feature request or need customization? Contact us:
-		</h2>
-	</div>
-    <?php if(isset($msg['success'])){ ?>
-        <div id="success_message">
-            <h3>Your inquery has been submitted successfully!</h3> 
-            <p> We will get back to you soon. </p>
-        </div>
-    <?php }else if(isset($msg['error'])){ ?>
-        <div id="error_message" style="width:100%; height:100%; "> <h3>Error</h3> Sorry there was an error sending your form. 
-        </div>
-	<?php } ?>
-	<div class="contact-section">
-		<div class="contact-address">
-		<div class="contact-info">
-			<h1>Website: </h1>
-			<p><a href="https://wpharbor.com/"><i class="fas fa-globe"></i> wpharbor.com</a></p>
-			<h1>Phone: </h1>
-			<p><a href="tel:800-407-1114">800-407-1114</a></p>
-			<h1>Email: </h1>
-			<p><a href="mailto:Support@wpharbor.com">Support@wpharbor.com</a></p>
-		</div>	
-		</div>
-		<div class="yachts-contact-form">
-                <form method="post" action="<?php echo get_home_url(); ?>/wp-admin/options-general.php?page=boats_api" id="reused_form">
-                    <input id="name" type="text" name="Name" required="" maxlength="50" placeholder="Your Name">
-                    <input id="email" type="email" name="Email" required="" maxlength="50" placeholder="Email">
-                    <textarea id="message" name="Message" rows="10" maxlength="6000" required="" placeholder="Message..."></textarea>
-                    <button class="button-primary" id="submit_query" name="submit_query" type="submit">Submit</button>
-                </form>
-            </div>
-	</div>
-	
-</div>
-
-
-
-	
-	
+?>
 
   <h2>Yacht Inquiries</h2>
 	<div class="yacht-inquiries-table">
