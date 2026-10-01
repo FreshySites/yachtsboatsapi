@@ -785,6 +785,25 @@ html body .modal-dialog {
 }
 
 @media only screen and (max-width: 768px) {
+    /* Start: Avada theme only */
+.page-template-yacht-detail-template-php #main .fusion-row{
+    display:block !important;
+}
+
+.page-template-yacht-detail-template-php #main .fusion-row .listing-main-detail .container {
+	padding: 0px !important;
+}
+
+.page-template-yacht-detail-template-php #main .fusion-row .listing-main-detail .col-lg-8{
+	padding: 0px !important;
+}
+
+.page-template-yacht-detail-template-php #main .fusion-row .col-lg-4.agent_info {
+    margin: 0px !important;
+    margin-bottom: 40px !important;
+}
+/* End: Avada theme only */
+
 	body.pageid-327 .container {
 		width: 100% !important;
 	}

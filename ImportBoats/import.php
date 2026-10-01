@@ -30,7 +30,7 @@ $wpdb->query("DROP TABLE IF EXISTS `$table11`");
 $wpdb->query("DROP TABLE IF EXISTS `$table12`");
 $wpdb->query("DROP TABLE IF EXISTS `$table13`");
 
-    $object = new BoatsAPICreateTables();
+$object = new BoatsAPICreateTables();
     global $wpdb;
     $object->CheckAndCreateBoatsTbl($wpdb);
     $object->CheckAndCreateAgentsTbl($wpdb);

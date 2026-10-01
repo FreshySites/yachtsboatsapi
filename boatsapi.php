@@ -3,7 +3,7 @@
 Plugin Name: Yacht Importer
 Plugin URI: https://wpharbor.com/
 Description: This plugin is used to fetch and store boats from API.
-Version: 1.5.0
+Version: 1.6.0
 Author: WP Harbor
 Author URI: https://wpharbor.com/
 Text Domain: boatsapi
@@ -15,7 +15,16 @@ if ( !function_exists( 'add_action' ) ) {
 	exit();
 }
 
-define( 'BOATS_VERSION', '1.5.0' );
+/* * */
+define('YACHT_PLUGIN_SLUG', 'yachtsboatsapi');
+define('YACHT_PLUGIN_FILE', plugin_basename(__FILE__));
+define('YACHT_PLUGIN_VERSION', '1.6.0');
+/* * */
+
+
+
+
+define( 'BOATS_VERSION', '1.6.0' );
 define( 'BOATS__MINIMUM_WP_VERSION', '4.0' );
 define( 'BOATS__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BOATS_DELETE_LIMIT', 100000 );
@@ -51,16 +60,23 @@ function plugin_redirect() {
 }
 
 // register jquery and style on initialization
-add_action('init', 'boatsRegisterScript');
-function boatsRegisterScript() {
-	wp_register_script( 'nouisliderjs', plugins_url('/nouislider/nouislider.min.js', __FILE__));
-	wp_register_script( 'script', plugins_url('/assets/js/script.js', __FILE__), false, '1.0.0', 'all');
-	wp_register_script( 'nouisliderjstw', plugins_url('/nouislider/wNumb.js', __FILE__));
 
-	wp_register_style( 'nouislider', plugins_url('/nouislider/nouislider.min.css', __FILE__), false, '1.0.0', 'all');
-	wp_register_style( 'custom', plugins_url('/assets/custom.css', __FILE__), false, '1.0.2', 'all');
-	wp_register_style( 'bootstrap', plugins_url('/assets/bootstrap.css', __FILE__), false, '1.0.0', 'all');
+function boatsRegisterScript() {
+	// Only run on yacht templates
+	if ( is_page_template( 'yacht-template.php' ) || is_page_template( 'yacht-detail-template.php' ) ) {
+
+		wp_register_script( 'nouisliderjs', plugins_url( '/nouislider/nouislider.min.js', __FILE__ ) );
+		wp_register_script( 'script', plugins_url( '/assets/js/script.js', __FILE__ ), [], '1.0.0', true );
+		wp_register_script( 'nouisliderjstw', plugins_url( '/nouislider/wNumb.js', __FILE__ ) );
+
+		wp_register_style( 'nouislider', plugins_url( '/nouislider/nouislider.min.css', __FILE__ ), [], '1.0.0', 'all' );
+		wp_register_style( 'custom', plugins_url( '/assets/custom.css', __FILE__ ), [], '1.0.2', 'all' );
+		wp_register_style( 'bootstrap', plugins_url( '/assets/bootstrap.css', __FILE__ ), [], '1.0.0', 'all' );
+	}
 }
+add_action( 'wp_enqueue_scripts', 'boatsRegisterScript' );
+
+// add_action('init', 'boatsRegisterScript'); // old way prior to restricting with templates
 
 // use the registered jquery and style above
 add_action('wp_enqueue_scripts', 'boatsEnqueueStyle');
@@ -652,13 +668,24 @@ function importYachtsBoats()
 }
 
 function validateActivationKey() {
-	// 1.4 scheduled a daily call to yachts.wpharbor.com. Clear that event and do not replace it.
-	$timestamp = wp_next_scheduled( 'isa_add_every_day' );
-	while ( $timestamp ) {
-		wp_unschedule_event( $timestamp, 'isa_add_every_day' );
-		$timestamp = wp_next_scheduled( 'isa_add_every_day' );
+	$hooks = array( 'isa_add_every_day', 'validate_activation_key_cron' );
+	$crons = _get_cron_array();
+	if ( ! is_array( $crons ) ) {
+		return;
+	}
+	foreach ( $crons as $timestamp => $cron ) {
+		foreach ( $hooks as $hook ) {
+			if ( ! isset( $cron[ $hook ] ) ) {
+				continue;
+			}
+			foreach ( $cron[ $hook ] as $event ) {
+				wp_unschedule_event( $timestamp, $hook, $event['args'] );
+			}
+		}
 	}
 }
+add_action( 'isa_add_every_day', 'validateActivationKey' );
+add_action( 'validate_activation_key_cron', 'validateActivationKey' );
 
 add_action('admin_enqueue_scripts', function(){
     /*
@@ -669,10 +696,71 @@ add_action('admin_enqueue_scripts', function(){
 });
 
 
-function yacht_listings() { 
+
+// [yacht-listings type="Power,Sail" fuel="diesel,unleaded" condition="Used"]
+
+// Case-sensitive (as per DB Values)
+// Comma-separated only (,)
+
+
+function yacht_listings($atts = []) { 
+
+	$atts = shortcode_atts([
+		'type'      => '', // e.g. Power,Sail
+		'fuel'      => '', // e.g. diesel,unleaded
+		'condition' => '', // e.g. Used
+	], $atts, 'yacht-listings');
+
   
 	ob_start();
+	
+	// -------------------------------------------------
+	// Apply shortcode attributes as default filters
+	// ONLY if GET params are not already present
+	// -------------------------------------------------
+
+	if (empty($_GET['type']) && !empty($atts['type'])) {
+		$_GET['type'] = array_map('trim', explode(',', $atts['type']));
+	}
+
+	if (empty($_GET['fuel']) && !empty($atts['fuel'])) {
+		$_GET['fuel'] = array_map('trim', explode(',', $atts['fuel']));
+	}
+
+	if (empty($_GET['condition']) && !empty($atts['condition'])) {
+		$_GET['condition'] = array_map('trim', explode(',', $atts['condition']));
+	}
+	
+	
+	$has_filters =
+		!empty($_GET['type']) ||
+		!empty($_GET['fuel']) ||
+		!empty($_GET['condition']) ||
+		!empty($_GET['make']) ||
+		!empty($_GET['hullid']) ||
+		!empty($_GET['boatname']) ||
+		!empty($_GET['minLenght']) ||
+		!empty($_GET['maxLenght']) ||
+		!empty($_GET['inputPrice']) ||
+		!empty($_GET['inputPriceMax']) ||
+		!empty($_GET['inputYear']) ||
+		!empty($_GET['inputYearMax']);
+
+	if ($has_filters && !isset($_GET['resultButton'])) {
+		$_GET['resultButton'] = '1';
+	}
+	
 	?>
+	
+	<link rel="stylesheet" href="<?php echo plugins_url( '/nouislider/nouislider.min.css', __FILE__ ); ?>" />
+    <link rel="stylesheet" href="<?php echo plugins_url( '/assets/custom.css', __FILE__ ); ?>" />
+    <link rel="stylesheet" href="<?php echo plugins_url( '/assets/bootstrap.css', __FILE__ ); ?>" />
+
+    <script src="<?php echo plugins_url( '/nouislider/nouislider.min.js', __FILE__ ); ?>"></script>
+    <script src="<?php echo plugins_url( '/nouislider/wNumb.js', __FILE__ ); ?>"></script>
+    <script src="<?php echo plugins_url( '/assets/js/script.js', __FILE__ ); ?>"></script>
+	
+	
 	<div class="yacht-listings-wrapper">
 	<?php
 	include plugin_dir_path( __FILE__ ) . 'yacht-shortcode-template.php';
@@ -687,11 +775,27 @@ add_shortcode('yacht-listings', 'yacht_listings');
 
 /****************CRON JOB WORK*****************/
 
-// Retire the 1.4 daily license check if a site still has it scheduled.
+
+
+/* // old code
+// Add a new schedule interval for daily cron jobs
+add_filter( 'cron_schedules', 'isa_add_every_day' );
+function isa_add_every_day( $schedules ) {
+    $schedules['every_day'] = array(
+        'interval'  => 86400, // 86400 seconds in a day
+        'display'   => __( 'Every Day', 'textdomain' )
+    );
+    return $schedules;
+}
+// Schedule an action if it's not already scheduled
+if ( ! wp_next_scheduled( 'isa_add_every_day' ) ) {
+    wp_schedule_event( time(), 'every_day', 'isa_add_every_day' );
+}
+// Hook into that action that’ll fire every day
 add_action( 'isa_add_every_day', 'validateActivationKey' );
+*/
 
-
-
+/* // old code
 add_filter('cron_schedules', 'boatsCroneSchedule');
 function boatsCroneSchedule($schedules)
 {
@@ -700,6 +804,73 @@ function boatsCroneSchedule($schedules)
 }
 
 add_action('boatsCroneSchedule', 'dailyImportBoatsCronJob');
+*/
+
+
+/*
+// new code with wp_cron method 
+// Register custom interval
+add_filter( 'cron_schedules', function($schedules) {
+    $schedules['every_day'] = [
+        'interval' => 86400,
+        'display'  => __( 'Every Day', 'textdomain' )
+    ];
+    return $schedules;
+});
+
+// Schedule the event if not already scheduled
+if ( ! wp_next_scheduled( 'validate_activation_key_cron' ) ) {
+    wp_schedule_event( time(), 'every_day', 'validate_activation_key_cron' );
+}
+
+// Hook the function
+add_action( 'validate_activation_key_cron', 'validateActivationKey' );
+
+
+// Register 6 hour schedule
+add_filter('cron_schedules', function($schedules) {
+    $schedules['every_six_h'] = [
+        'interval' => 21600,
+        'display'  => 'Every Six Hours'
+    ];
+    return $schedules;
+});
+
+// Schedule the import event
+if ( ! wp_next_scheduled( 'import_boats_cron' ) ) {
+    wp_schedule_event( time(), 'every_six_h', 'import_boats_cron' );
+}
+
+// Hook it
+add_action('import_boats_cron', 'dailyImportBoatsCronJob');
+
+*/
+
+
+
+
+// Run dailyImportBoatsCronJob once every 6 hours
+function maybe_run_import_boats() {
+    $last_run = get_option('yacht_plugin_last_import_time', 0);
+    $now      = current_time('timestamp');
+
+    if ( ($now - $last_run) > 6 * HOUR_IN_SECONDS ) {
+        ob_start();
+        dailyImportBoatsCronJob();
+        ob_end_clean(); // discard any output
+
+        update_option('yacht_plugin_last_import_time', $now);
+		
+    }
+}
+add_action('wp_footer', 'maybe_run_import_boats');
+
+
+
+
+
+
+
 function dailyImportBoatsCronJob()
 {
     require_once( BOATS__PLUGIN_DIR . 'ImportBoats/import.php' );
@@ -708,7 +879,10 @@ function dailyImportBoatsCronJob()
 
 
 
-/****************Detail Template Shortcode*****************/
+
+
+
+/**************** Detail Template Shortcode *****************/
 
 
 function yacht_detail_shortcode( $atts, $content = null ) {
@@ -721,6 +895,38 @@ function yacht_detail_shortcode( $atts, $content = null ) {
 add_shortcode( 'yacht_detail_shortcode', 'yacht_detail_shortcode' );
 
 
+
+
+
+
+function cleanup_yacht_pdfs() {
+    $upload_dir = wp_upload_dir();
+    $dir = $upload_dir['basedir'] . '/yacht_pdfs/';
+
+    if (!is_dir($dir)) {
+        return;
+    }
+
+    // Delete PDFs older than 24 hours (60 * 60 = 3600 seconds = 1 hour)
+    $files = glob($dir . '*.pdf');
+    if (!empty($files)) {
+        foreach ($files as $file) {
+            if (filemtime($file) < (time() - 3600)) {
+                unlink($file);
+            }
+        }
+    }
+}
+add_action('yacht_pdf_cleanup_event', 'cleanup_yacht_pdfs');
+
+
+
+function schedule_yacht_pdf_cleanup() {
+    if (!wp_next_scheduled('yacht_pdf_cleanup_event')) {
+        wp_schedule_event(time(), 'daily', 'yacht_pdf_cleanup_event');
+    }
+}
+add_action('wp', 'schedule_yacht_pdf_cleanup');
 
 
 

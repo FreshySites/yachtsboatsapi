@@ -62,35 +62,38 @@ class SaveAllBoatsAPIData {
 
 		
 
-		$url = $api_url.$key."&status=active,on-order,sale%20pending&rows=10000";
+		$url = $api_url.$key."&salesstatus=active,on-order,sale%20pending&rows=10000";
 
 
 
 		$curl = curl_init();
 
 		  curl_setopt_array($curl, array(
-
-		  CURLOPT_URL => $url,
-
-		  CURLOPT_RETURNTRANSFER => true,
-
-		  CURLOPT_ENCODING => '',
-
-		  CURLOPT_MAXREDIRS => 10,
-
-		  CURLOPT_TIMEOUT => 0,
-
-		  CURLOPT_FOLLOWLOCATION => true,
-
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-
-		  CURLOPT_CUSTOMREQUEST => 'GET',
-
-		));
+    CURLOPT_URL => $url,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'GET',
+    CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+        'User-Agent: Mozilla/5.0 (compatible; YachtImporter/1.5.4)'
+    ),
+));
 
 		$response = curl_exec($curl);
+		
+		error_log("YACHT DEBUG: first 200 chars = " . substr($response, 0, 200));
+        error_log("YACHT DEBUG: json_last_error = " . json_last_error() . " msg = " . json_last_error_msg());
 
-		curl_close($curl);
+        // DEBUG - add these 3 lines temporarily
+        $curl_error = curl_error($curl);
+        $curl_errno = curl_errno($curl);
+        error_log("YACHT DEBUG: curl_errno=$curl_errno, curl_error=$curl_error, response_length=" . strlen($response));
+        
+        curl_close($curl);
 
 		$response = json_decode($response);
 
@@ -101,24 +104,25 @@ class SaveAllBoatsAPIData {
 
 
 	public static function InsertQuery($query, $wpdb){
-
-	    global $wpdb;
+		global $wpdb;
 
 		$res = $wpdb->query($query);
 
-	    if($res == 1) {
-
-			$data = array('last_id' => $wpdb->insert_id, 'message' => true);
-
-		}else{
-
-			$data = array('message' => 'Error:', 'res' => $res);
-
+		if ($res === false) {
+			error_log('Boats API SQL Error: ' . $wpdb->last_error);
+			error_log('Boats API SQL Query: ' . $query);
+			return array(
+				'message' => false,
+				'error'   => $wpdb->last_error
+			);
 		}
 
-		return $data;
-
+		return array(
+			'last_id' => $wpdb->insert_id,
+			'message' => true
+		);
 	}
+
 
 
 
@@ -216,8 +220,10 @@ class SaveAllBoatsAPIData {
 
 			}else{
 
-				$message = array('last_id' => $message['last_id'],'error' => true); 
-
+				// $message = array('last_id' => $message['last_id'],'error' => true); 
+				
+				$message = array('last_id' => $code,'error' => true); 
+				
 			}
 
 			
@@ -226,7 +232,9 @@ class SaveAllBoatsAPIData {
 
 		else{
 
-			$message = array('last_id' => $returnQuery['data']->id);
+			//$message = array('last_id' => $returnQuery['data']->id);
+			
+			$message = array('last_id' => $code);
 
 		}
 
@@ -344,12 +352,17 @@ class SaveAllBoatsAPIData {
 
 			if($returnQuery['isCheck'] == 1){
 
-				$Uri = str_replace("'","\'",$value->Uri);
+				
+				$Uri     = $value->Uri ?? '';
+				$Caption = $value->Caption ?? '';
 
-				$Caption = str_replace("'","\'",$value->Caption);
+				$query = $wpdb->prepare(
+					"INSERT INTO `$nameTbl` (boatid, url, caption, priority)
+					 VALUES (%d, %s, %s, %d)",
+					$boatid, $Uri, $Caption, $value->Priority
+				);
 
-			  $query = "insert into `$nameTbl` (boatid,url,caption,priority) values('$boatid','$Uri','$Caption','$value->Priority')";
-
+				
 			}else{
 
 				$id = $returnQuery['data'];
@@ -376,67 +389,44 @@ class SaveAllBoatsAPIData {
 
 
 
-	public static function InsertUpdateVideo($data,$boatid,$wpdb){
-
+	public static function InsertUpdateVideo($data, $boatid, $wpdb){
 		global $wpdb;
 
-		$url = $data->url;
+		$table = $wpdb->prefix . "videos";
 
-		$nameTbl = $wpdb->prefix."videos";
+		foreach ($data->url as $key => $url) {
 
-		foreach ($url as $key => $value) {
+			$thumbnail = $data->thumbnailUrl[$key] ?? '';
+			$title     = $data->title[$key] ?? '';
 
-			
+			// check existing
+			$existing = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT id FROM `$table`
+					 WHERE boatid = %d AND url = %s AND thumbnailUrl = %s",
+					$boatid, $url, $thumbnail
+				)
+			);
 
-			$thumbnailUrl = $data->thumbnailUrl[$key];
-
-			$title = $data->title[$key];
-
-			$desc = $data->desc[$key];
-
-		    
-
-		    $whereConditon = " boatid = '$boatid' and url = '$value' and thumbnailUrl= '$thumbnailUrl' ";
-
-		    
-
-		    $returnQuery = self::IsCheckDataQuery($whereConditon, $nameTbl, $wpdb);
-
-			
-
-			if($returnQuery['isCheck'] == 1){
-
-				
-
-			  $query = "insert into `$nameTbl` (boatid,url,thumbnailUrl,title) values('$boatid','$value','$thumbnailUrl','$title')";
-
-			
-
-			}else{
-
-
-
-				$id = $returnQuery['data'];
-
-				$id = $id->id;
-
-				$query = " update `$nameTbl` set url = '$value', thumbnailUrl= '$thumbnailUrl', title = '$title' id = $id ";
-
+			if (!$existing) {
+				$query = $wpdb->prepare(
+					"INSERT INTO `$table` (boatid, url, thumbnailUrl, title)
+					 VALUES (%d, %s, %s, %s)",
+					$boatid, $url, $thumbnail, $title
+				);
+			} else {
+				$query = $wpdb->prepare(
+					"UPDATE `$table`
+					 SET url = %s, thumbnailUrl = %s, title = %s
+					 WHERE id = %d",
+					$url, $thumbnail, $title, $existing->id
+				);
 			}
 
-			
-
-			$message = self::InsertQuery($query,$wpdb);
-
-			if($message['message'] != true){
-
-				ErrorMessage($message); 
-
-			}
-
+			self::InsertQuery($query, $wpdb);
 		}
-
 	}
+
 
 
 
@@ -614,11 +604,121 @@ class SaveAllBoatsAPIData {
 
 
 
-		    $query = "UPDATE `$nameTbl` SET yachtworldid = '$value->yachtworldid', agentid = '$value->agentid', status = '$value->status', city = '$value->city', countrycode = '$value->countrycode',statecode = '$value->statecode',price = '$value->price',make = '$value->make',model = '$value->model',nominallength = '$value->nominallength',normnominallength = '$value->normnominallength',lengthoverall = '$value->lengthoverall',year = '$value->year',boatname = '$value->boatname',brokername = '$value->brokername',companyname = '$value->companyname',buildername = '$value->buildername',designername = '$value->designername',fulltextsearch = '$value->fullserachtx',maxdraft = '$value->maxdraft',displacementmeasure = '$value->displacementmeasure',ballastweightmeasure = '$value->ballastweightmeasure',bridgeclearancemeasure = '$value->bridgeclearancemeasure',cabinheadroommeasure= '$value->cabinheadroommeasure',beammeasure = '$value->beammeasure',deadrisemeasure = '$value->deadrisemeasure',electricalcircuitmeasure = '$value->electricalcircuitmeasure',freeboardmeasure = '$value->freeboardmeasure',fueltankcapacitymeasure = '$value->fueltankcapacitymeasure',fueltankcountnumeric  = '$value->fueltankcountnumeric',holdingtankcapacitymeasure  = '$value->holdingtankcapacitymeasure',holdingtankcountnumeric  = '$value->holdingtankcountnumeric',maximumspeedmeasure  = '$value->maximumspeedmeasure',rangemeasure  = '$value->rangemeasure',watertankcapacitymeasure  = '$value->watertankcapacitymeasure
-
-		   	',watertankcountnumeric  = '$value->watertankcountnumeric',numberofengines  = '$value->numberofengines',totalenginehoursnumeric  = '$value->totalenginehoursnumeric',totalenginepowerquantity  = '$value->totalenginepowerquantity',registrationcountrycode  = '$value->registrationcountrycode',generalboatdescription = '$value->generalboatdescription',additionaldetaildescription = '$value->additionaldetaildescription',lat = '$value->lat',lng  = '$value->lng',viewed  = '$value->viewed',isavailableforpls  = '$value->isavailableforpls',ispricereduced  = '$value->ispricereduced',ishot  = '$value->ishot',isdisplayedaftersold  = '$value->isdisplayedaftersold',ispricehidden  = '$value->ispricehidden',hascoop  = '$value->hascoop',itemreceiveddate  = '$value->itemreceiveddate',modifieddate = '$value->modifieddate' WHERE id = '$value->id'";
+		    //$query = "UPDATE `$nameTbl` SET yachtworldid = '$value->yachtworldid', agentid = '$value->agentid', status = '$value->status', city = '$value->city', countrycode = '$value->countrycode',statecode = '$value->statecode',price = '$value->price',make = '$value->make',model = '$value->model',nominallength = '$value->nominallength',normnominallength = '$value->normnominallength',lengthoverall = '$value->lengthoverall',year = '$value->year',boatname = '$value->boatname',brokername = '$value->brokername',companyname = '$value->companyname',buildername = '$value->buildername',designername = '$value->designername',fulltextsearch = '$value->fullserachtx',maxdraft = '$value->maxdraft',displacementmeasure = '$value->displacementmeasure',ballastweightmeasure = '$value->ballastweightmeasure',bridgeclearancemeasure = '$value->bridgeclearancemeasure',cabinheadroommeasure= '$value->cabinheadroommeasure',beammeasure = '$value->beammeasure',deadrisemeasure = '$value->deadrisemeasure',electricalcircuitmeasure = '$value->electricalcircuitmeasure',freeboardmeasure = '$value->freeboardmeasure',fueltankcapacitymeasure = '$value->fueltankcapacitymeasure',fueltankcountnumeric  = '$value->fueltankcountnumeric',holdingtankcapacitymeasure  = '$value->holdingtankcapacitymeasure',holdingtankcountnumeric  = '$value->holdingtankcountnumeric',maximumspeedmeasure  = '$value->maximumspeedmeasure',rangemeasure  = '$value->rangemeasure',watertankcapacitymeasure  = '$value->watertankcapacitymeasure',watertankcountnumeric  = '$value->watertankcountnumeric',numberofengines  = '$value->numberofengines',totalenginehoursnumeric  = '$value->totalenginehoursnumeric',totalenginepowerquantity  = '$value->totalenginepowerquantity',registrationcountrycode  = '$value->registrationcountrycode',generalboatdescription = '$value->generalboatdescription',additionaldetaildescription = '$value->additionaldetaildescription',lat = '$value->lat',lng  = '$value->lng',viewed  = '$value->viewed',isavailableforpls  = '$value->isavailableforpls',ispricereduced  = '$value->ispricereduced',ishot  = '$value->ishot',isdisplayedaftersold  = '$value->isdisplayedaftersold',ispricehidden  = '$value->ispricehidden',hascoop  = '$value->hascoop',itemreceiveddate  = '$value->itemreceiveddate',modifieddate = '$value->modifieddate' WHERE id = '$value->id'";
 
 				
+$query = $wpdb->prepare(
+    "UPDATE `$nameTbl` SET
+        yachtworldid = %s,
+        agentid = %s,
+        status = %s,
+        city = %s,
+        countrycode = %s,
+        statecode = %s,
+        price = %s,
+        make = %s,
+        model = %s,
+        nominallength = %s,
+        normnominallength = %s,
+        lengthoverall = %s,
+        year = %s,
+        boatname = %s,
+        brokername = %s,
+        companyname = %s,
+        buildername = %s,
+        designername = %s,
+        fulltextsearch = %s,
+        maxdraft = %s,
+        displacementmeasure = %s,
+        ballastweightmeasure = %s,
+        bridgeclearancemeasure = %s,
+        cabinheadroommeasure = %s,
+        beammeasure = %s,
+        deadrisemeasure = %s,
+        electricalcircuitmeasure = %s,
+        freeboardmeasure = %s,
+        fueltankcapacitymeasure = %s,
+        fueltankcountnumeric = %s,
+        holdingtankcapacitymeasure = %s,
+        holdingtankcountnumeric = %s,
+        maximumspeedmeasure = %s,
+        rangemeasure = %s,
+        watertankcapacitymeasure = %s,
+        watertankcountnumeric = %s,
+        numberofengines = %s,
+        totalenginehoursnumeric = %s,
+        totalenginepowerquantity = %s,
+        registrationcountrycode = %s,
+        generalboatdescription = %s,
+        additionaldetaildescription = %s,
+        lat = %s,
+        lng = %s,
+        viewed = %s,
+        isavailableforpls = %s,
+        ispricereduced = %s,
+        ishot = %s,
+        isdisplayedaftersold = %s,
+        ispricehidden = %s,
+        hascoop = %s,
+        itemreceiveddate = %s,
+        modifieddate = %s
+     WHERE id = %d",
+    $value->yachtworldid,
+    $value->agentid,
+    $value->status,
+    $value->city,
+    $value->countrycode,
+    $value->statecode,
+    $value->price,
+    $value->make,
+    $value->model,
+    $value->nominallength,
+    $value->normnominallength,
+    $value->lengthoverall,
+    $value->year,
+    $value->boatname,
+    $value->brokername,
+    $value->companyname,
+    $value->buildername,
+    $value->designername,
+    $value->fullserachtx,
+    $value->maxdraft,
+    $value->displacementmeasure,
+    $value->ballastweightmeasure,
+    $value->bridgeclearancemeasure,
+    $value->cabinheadroommeasure,
+    $value->beammeasure,
+    $value->deadrisemeasure,
+    $value->electricalcircuitmeasure,
+    $value->freeboardmeasure,
+    $value->fueltankcapacitymeasure,
+    $value->fueltankcountnumeric,
+    $value->holdingtankcapacitymeasure,
+    $value->holdingtankcountnumeric,
+    $value->maximumspeedmeasure,
+    $value->rangemeasure,
+    $value->watertankcapacitymeasure,
+    $value->watertankcountnumeric,
+    $value->numberofengines,
+    $value->totalenginehoursnumeric,
+    $value->totalenginepowerquantity,
+    $value->registrationcountrycode,
+    $value->generalboatdescription,
+    $value->additionaldetaildescription,
+    $value->lat,
+    $value->lng,
+    $value->viewed,
+    $value->isavailableforpls,
+    $value->ispricereduced,
+    $value->ishot,
+    $value->isdisplayedaftersold,
+    $value->ispricehidden,
+    $value->hascoop,
+    $value->itemreceiveddate,
+    $value->modifieddate,
+    $value->id
+);
+
 
 	   		}
 
@@ -748,7 +848,9 @@ class SaveAllBoatsAPIData {
 
 			}else{
 
-				$message = array('last_id' => $message['last_id'],'error' => true); 
+				// $message = array('last_id' => $message['last_id'],'error' => true); 
+				
+				$message = array('last_id' => $code,'error' => true); 
 
 			}
 
@@ -758,7 +860,9 @@ class SaveAllBoatsAPIData {
 
 		else{
 
-			$message = array('last_id' => $returnQuery['data']->id);
+			// $message = array('last_id' => $returnQuery['data']->id);
+			
+			$message = array('last_id' => $code);
 
 		}
 
@@ -792,11 +896,13 @@ class SaveAllBoatsAPIData {
 
 			if($message['message'] != true){
 
-				$message = array('message' =>$message,'error' => true); 
+				$message = array('message' =>$message, 'error' => true); 
 
 			}else{
 
-				$message = array('last_id' => $message['last_id'],'error' => true); 
+				//$message = array('last_id' => $message['last_id'],'error' => true); 
+				
+				$message = array('last_id' => $code,'error' => true); 
 
 			}
 
@@ -806,7 +912,9 @@ class SaveAllBoatsAPIData {
 
 		else{
 
-			$message = array('last_id' => $returnQuery['data']->id);
+			//$message = array('last_id' => $returnQuery['data']->id);
+			
+			$message = array('last_id' => $code);
 
 		}
 
@@ -844,7 +952,9 @@ class SaveAllBoatsAPIData {
 
 			}else{
 
-				$message = array('last_id' => $message['last_id'],'error' => true); 
+				//$message = array('last_id' => $message['last_id'],'error' => true); 
+				
+				$message = array('last_id' => $code,'error' => true); 
 
 			}
 
@@ -854,7 +964,9 @@ class SaveAllBoatsAPIData {
 
 		else{
 
-			$message = array('last_id' => $returnQuery['data']->id);
+			//$message = array('last_id' => $returnQuery['data']->id);
+			
+			$message = array('last_id' => $code);
 
 		}
 

@@ -49,20 +49,27 @@ if(isset($_GET['resultButton'])){
 		$criteria .= " AND make = '$get_make' ";
 	}
 	if(isset($_GET['fuel']) && $_GET['fuel'] != ''){
-		$implode_fuelid = implode(",",$_GET['fuel']);
-		$criteria .= " AND fuelid in($implode_fuelid)";
+		
+		$implode_fuelid = "'" . implode("','", $_GET['fuel']) . "'";
+		$criteria .= " AND fuelid IN ($implode_fuelid)";
 	}
+	/*
 	if(isset($_GET['type']) && $_GET['type'] != ''){
 		$implode_categoryid = implode(",",$_GET['type']);
 		$criteria .= " AND categoryid in($implode_categoryid)";
 	}
+	*/
+	if (!empty($_GET['type'])) {
+		$implode_categoryid = "'" . implode("','", $_GET['type']) . "'";
+		$criteria .= " AND categoryid IN ($implode_categoryid)";
+	}
 	if(isset($_GET['hullid']) && $_GET['hullid'] != '' && $_GET['hullid'] != 'undefined'){
-		$criteria .= " AND hullid = ".$_GET['hullid'];
+		$criteria .= " AND hullid = '" . esc_sql($_GET['hullid']) . "'";
 	}
 	if(isset($_GET['condition']) && $_GET['condition'] != ''){
-
-		$implode_condition = implode(",", $_GET['condition']);
-		$criteria .= " AND conditionid in ($implode_condition)";
+		
+		$implode_condition = "'" . implode("','", $_GET['condition']) . "'";
+		$criteria .= " AND conditionid IN ($implode_condition)";
 	}
 	if(isset($_GET['boatname']) && $_GET['boatname'] != '' ){
 		$criteria .= " AND boatname LIKE '%".$_GET['boatname']."%'";
@@ -131,11 +138,11 @@ $boat_conditions = $wpdb->prefix.'boat_conditions';
 $boat_categories = $wpdb->prefix.'boat_categories';
 $boat_fuels = $wpdb->prefix.'boat_fuel';
 $makes = $wpdb->get_results( "SELECT distinct make FROM $table1 where status='Active' or status = 'On-Order' or status='Sale Pending' ORDER by make");
-$hullmaterials = $wpdb->get_results( "SELECT id,title FROM $hull_materials where isactive=1 and title != '' and id in (select hullid from $table1 where hullid is not null and status in ('active','sale pending')) order by position");
+$hullmaterials = $wpdb->get_results( "SELECT * FROM $hull_materials where isactive=1 and title != '' and code in (select hullid from $table1 where hullid is not null and status in ('active','sale pending')) order by position");
 $states = $wpdb->get_results( "SELECT distinct statecode FROM $table1 where statecode <> '' and statecode != 'Unknown' and status = 'active' order by statecode;");
-$boatcategories = $wpdb->get_results( "SELECT id,title FROM $boat_categories where isactive = 1 LIMIT 2");
-$boatconditions = $wpdb->get_results( "SELECT id,title FROM $boat_conditions where isactive = 1 LIMIT 2");
-$boatfuels = $wpdb->get_results( "SELECT id,title FROM $boat_fuels where isactive = 1 LIMIT 2");
+$boatcategories = $wpdb->get_results( "SELECT * FROM $boat_categories where isactive = 1 LIMIT 2");
+$boatconditions = $wpdb->get_results( "SELECT * FROM $boat_conditions where isactive = 1 LIMIT 2");
+$boatfuels = $wpdb->get_results( "SELECT * FROM $boat_fuels where isactive = 1 LIMIT 2");
 ?>
 <div class="main-content">
 	<div class="row">
@@ -226,7 +233,7 @@ $boatfuels = $wpdb->get_results( "SELECT id,title FROM $boat_fuels where isactiv
 										<select id="hullid" name="hullid" class="form-control">
 											<option value="">- Select -</option>
 											<?php foreach($hullmaterials as $hull){ ?>
-												<option <?php if(isset($_GET['hullid'])){ if($hull->id == $_GET['hullid']){ echo "selected";} } ?> value="<?php echo $hull->id; ?>"><?php echo $hull->title; ?></option>
+												<option <?php if(isset($_GET['hullid'])){ if($hull->code == $_GET['hullid']){ echo "selected";} } ?> value="<?php echo $hull->code; ?>"><?php echo $hull->title; ?></option>
 											<?php } ?>
 										</select>
 									</div>
@@ -242,11 +249,11 @@ $boatfuels = $wpdb->get_results( "SELECT id,title FROM $boat_fuels where isactiv
 												if(isset($_GET['fuel'])){
 												?>
 												<li class="custom-checkRad">
-													<input <?php if(in_array($fuel->id, $_GET['fuel']) ){ echo 'checked'; } ?> type="checkbox" name="fuel[]" id="<?php echo strtolower($fuel->title)."Rad"; ?>" value="<?php echo $fuel->id; ?>"><label for="<?php echo strtolower($fuel->title)."Rad"; ?>"><?php echo $fuel->title; ?></label>
+													<input <?php if(in_array($fuel->code, $_GET['fuel']) ){ echo 'checked'; } ?> type="checkbox" name="fuel[]" id="<?php echo strtolower($fuel->title)."Rad"; ?>" value="<?php echo $fuel->code; ?>"><label for="<?php echo strtolower($fuel->title)."Rad"; ?>"><?php echo $fuel->title; ?></label>
 												</li>
 											<?php }else{ ?>
 												<li class="custom-checkRad">
-													<input type="checkbox" name="fuel[]" id="<?php echo strtolower($fuel->title)."Rad"; ?>" value="<?php echo $fuel->id; ?>"><label for="<?php echo strtolower($fuel->title)."Rad"; ?>"><?php echo $fuel->title; ?></label>
+													<input type="checkbox" name="fuel[]" id="<?php echo strtolower($fuel->title)."Rad"; ?>" value="<?php echo $fuel->code; ?>"><label for="<?php echo strtolower($fuel->title)."Rad"; ?>"><?php echo $fuel->title; ?></label>
 												</li>
 											<?php
 											} 
@@ -263,11 +270,11 @@ $boatfuels = $wpdb->get_results( "SELECT id,title FROM $boat_fuels where isactiv
 												if(isset($_GET['type'])){
 												?>
 												<li class="custom-checkRad">
-													<input <?php if(in_array($category->id, $_GET['type']) ){ echo 'checked'; } ?> type="checkbox" name="type[]" id="<?php echo strtolower($category->title)."Rad"; ?>" value="<?php echo $category->id; ?>"><label for="<?php echo strtolower($category->title)."Rad"; ?>"><?php echo $category->title; ?></label>
+													<input <?php if(in_array($category->code, $_GET['type']) ){ echo 'checked'; } ?> type="checkbox" name="type[]" id="<?php echo strtolower($category->code)."Rad"; ?>" value="<?php echo $category->code; ?>"><label for="<?php echo strtolower($category->code)."Rad"; ?>"><?php echo $category->code; ?></label>
 												</li>
 											<?php }else{ ?>
 												<li class="custom-checkRad">
-													<input type="checkbox" name="type[]" id="<?php echo strtolower($category->title)."Rad"; ?>" value="<?php echo $category->id; ?>"><label for="<?php echo strtolower($category->title)."Rad"; ?>"><?php echo $category->title; ?></label>
+													<input type="checkbox" name="type[]" id="<?php echo strtolower($category->code)."Rad"; ?>" value="<?php echo $category->code; ?>"><label for="<?php echo strtolower($category->code)."Rad"; ?>"><?php echo $category->code; ?></label>
 												</li>
 											<?php
 											} 
@@ -284,12 +291,12 @@ $boatfuels = $wpdb->get_results( "SELECT id,title FROM $boat_fuels where isactiv
 												if(isset($_GET['condition'])){
 												?>
 												<li class="custom-checkRad">
-													<input <?php if(in_array($condition->id, $_GET['condition']) ){ echo 'checked'; } ?> type="checkbox" name="condition[]" id="<?php echo strtolower($condition->title)."Rad"; ?>" value="<?php echo $condition->id; ?>"><label for="<?php echo strtolower($condition->title)."Rad"; ?>"><?php echo $condition->title; ?></label>
+													<input <?php if(in_array($condition->code, $_GET['condition']) ){ echo 'checked'; } ?> type="checkbox" name="condition[]" id="<?php echo strtolower($condition->title)."Rad"; ?>" value="<?php echo $condition->code; ?>"><label for="<?php echo strtolower($condition->title)."Rad"; ?>"><?php echo $condition->title; ?></label>
 												</li>
 											<?php 
 												}else{ ?>
 													<li class="custom-checkRad">
-														<input type="checkbox" name="condition[]" id="<?php echo strtolower($condition->title)."Rad"; ?>" value="<?php echo $condition->id; ?>"><label for="<?php echo strtolower($condition->title)."Rad"; ?>"><?php echo $condition->title; ?></label>
+														<input type="checkbox" name="condition[]" id="<?php echo strtolower($condition->title)."Rad"; ?>" value="<?php echo $condition->code; ?>"><label for="<?php echo strtolower($condition->title)."Rad"; ?>"><?php echo $condition->title; ?></label>
 													</li>
 											<?php }
 										} 

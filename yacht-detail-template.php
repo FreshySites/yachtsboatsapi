@@ -52,7 +52,7 @@ $rs_boat = json_decode(json_encode($boat_db_arr), true);
 
 $hullid = $rs_boat[0]['hullid'];
 
-$hull_title = $wpdb->get_results("SELECT title FROM $boat_hull Where id = $hullid");
+$hull_title = $wpdb->get_results("SELECT title FROM $boat_hull Where code = '$hullid'");
 
 $hul = json_decode(json_encode($hull_title), true);
 
@@ -85,8 +85,6 @@ if($rs_engines[0]['fuel']){
 }
 
 
-
-$keel = $wpdb->get_var  ("SELECT value FROM boat_properties where boatid=". $boat->id . " and token ='BoatKeelCode'" );
 
 $count = 1;
 
@@ -234,7 +232,7 @@ if(count($rs_videos) > 0){
 
 
 
-            <?php if($rs_boat[0]['buildername']!="" || $rs_boat[0]['designername']!="" || $keel!="" || $rs_boat[0]['make']!="" ){ ?>
+            <?php if($rs_boat[0]['buildername']!="" || $rs_boat[0]['designername']!="" || $rs_boat[0]['make']!="" ){ ?>
 
                   <h4>Make</h4>
 
@@ -245,8 +243,6 @@ if(count($rs_videos) > 0){
                       <?php if($rs_boat[0]['buildername']!=""){  echo "Builder: ".$rs_boat[0]['buildername']."</br>";}?>
 
                       <?php if($rs_boat[0]['designername']!=""){ echo "Designer: ".$rs_boat[0]['designername']."</br>"; }?>
-
-                      <?php if($keel!=""){  echo "Keel: ".$keel."</br>";} ?>
 
                   </p>
 
@@ -369,7 +365,7 @@ $upload_path = $upload_dir['basedir'];
 
 
 
-$pdfDir = $upload_path . '/pdfs/';
+$pdfDir = $upload_path . '/yacht_pdfs/';
 
 if (!is_dir($pdfDir)) {
     mkdir($pdfDir, 0755, true);
@@ -389,7 +385,7 @@ $pdfFilePath = $pdfDir . $slug1;
 $upload_dir = wp_upload_dir();
 $upload_url = $upload_dir['baseurl'];
 
-$pdfFileURL = $upload_url . "/pdfs/" . $slug1;
+$pdfFileURL = $upload_url . "/yacht_pdfs/" . $slug1;
 
 
 
@@ -500,7 +496,7 @@ $pdf->Cell(0, 10, 'YW# ' . $rs_boat[0]['yachtworldid'], 0, 1, 'L');
 
 // Make -------------------------------------------------------------------------------------------------------------
 
-if($rs_boat[0]['buildername']!="" || $rs_boat[0]['designername']!="" || $keel!="" || $rs_boat[0]['make']!="" ){
+if($rs_boat[0]['buildername']!="" || $rs_boat[0]['designername']!="" || $rs_boat[0]['make']!="" ){
     
     
 $pdf->SetFont('helvetica', 'B', 14);
@@ -528,12 +524,7 @@ $pdf->SetFont('helvetica', '', 12);
         
     }
 
-    if($keel!=""){  
-        
-        $pdf->Cell(0, 10, 'Keel: ' . $keel, 0, 1, 'L');
-        
-    }
-      
+       
 
 }
 

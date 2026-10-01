@@ -56,7 +56,7 @@ $rs_boat = json_decode(json_encode($boat_db_arr), true);
 
 $hullid = $rs_boat[0]['hullid'];
 
-$hull_title = $wpdb->get_results("SELECT title FROM $boat_hull Where id = $hullid");
+$hull_title = $wpdb->get_results("SELECT title FROM $boat_hull Where code = '$hullid'");
 
 $hul = json_decode(json_encode($hull_title), true);
 
@@ -376,7 +376,7 @@ $upload_path = $upload_dir['basedir'];
 
 
 
-$pdfDir = $upload_path . '/pdfs/';
+$pdfDir = $upload_path . '/yacht_pdfs/';
 
 if (!is_dir($pdfDir)) {
     mkdir($pdfDir, 0755, true);
@@ -396,7 +396,7 @@ $pdfFilePath = $pdfDir . $slug1;
 $upload_dir = wp_upload_dir();
 $upload_url = $upload_dir['baseurl'];
 
-$pdfFileURL = $upload_url . "/pdfs/" . $slug1;
+$pdfFileURL = $upload_url . "/yacht_pdfs/" . $slug1;
 
 
 

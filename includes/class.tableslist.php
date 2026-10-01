@@ -54,9 +54,9 @@ class BoatsAPITableList {
 
 		`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 
-		`categoryid` int(10) unsigned NOT NULL,
+		`categoryid` varchar(50) DEFAULT NULL,
 
-		`conditionid` int(10) unsigned NOT NULL,
+		`conditionid` varchar(50) DEFAULT NULL,
 
 		`yachtworldid` int(10) unsigned DEFAULT NULL,
 
@@ -64,9 +64,9 @@ class BoatsAPITableList {
 
 		`agentid` int(10) DEFAULT NULL,
 
-		`hullid` int(10) DEFAULT NULL,
+		`hullid` varchar(50) DEFAULT NULL,
 
-		`fuelid` int(10) DEFAULT NULL,
+		`fuelid` varchar(50) DEFAULT NULL,
 
 		`status` varchar(32) NOT NULL,
 
